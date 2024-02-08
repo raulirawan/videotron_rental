@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/pages/index_page.dart';
 import 'package:videotron_rental/pages/login_page.dart';
 import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/pages/register_page.dart';
 import 'package:videotron_rental/pages/splash_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+
   runApp(const MyApp());
 }
 

@@ -1,9 +1,84 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:videotron_rental/models/transaction_model.dart';
+import 'package:videotron_rental/pages/date_form_page.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/form_card.dart';
 
-class RentalPage extends StatelessWidget {
+class RentalPage extends StatefulWidget {
   const RentalPage({super.key});
+
+  @override
+  State<RentalPage> createState() => _RentalPageState();
+}
+
+class _RentalPageState extends State<RentalPage> {
+  TransactionModel? _transactionModel;
+
+  Future<void> _loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('transaction');
+    if (jsonString != null) {
+      _transactionModel = TransactionModel.fromJson(jsonDecode(jsonString));
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadData();
+  }
+
+  convertDate(DateTime? date) {
+    // Intl.defaultLocale = 'id';
+    String formattedDate = DateFormat('d MMMM, yyyy').format(date!);
+
+    var day = DateFormat('EEEE').format(date);
+    var hari = "";
+    switch (day) {
+      case 'Sunday':
+        {
+          hari = "Minggu";
+        }
+        break;
+      case 'Monday':
+        {
+          hari = "Senin";
+        }
+        break;
+      case 'Tuesday':
+        {
+          hari = "Selasa";
+        }
+        break;
+      case 'Wednesday':
+        {
+          hari = "Rabu";
+        }
+        break;
+      case 'Thursday':
+        {
+          hari = "Kamis";
+        }
+        break;
+      case 'Friday':
+        {
+          hari = "Jumat";
+        }
+        break;
+      case 'Saturday':
+        {
+          hari = "Sabtu";
+        }
+        break;
+    }
+    return '$hari, $formattedDate';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +103,24 @@ class RentalPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/icon-file.png',
-                        height: 24,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Pesanan Anda",
-                        style: whiteTextStyle.copyWith(
-                            fontSize: 16, fontWeight: bold),
-                      )
-                    ],
-                  ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/icon-file.png',
+                      height: 24,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Pesanan Anda",
+                      style: whiteTextStyle.copyWith(
+                          fontSize: 16, fontWeight: bold),
+                    )
+                  ],
                 ),
               ),
               Container(
@@ -90,10 +163,14 @@ class RentalPage extends StatelessWidget {
                           height: 10,
                         ),
                         FormCard(
-                            title: 'Sabtu, 3 Januari 2023',
+                            title:
+                                '${convertDate(_transactionModel?.date ?? DateTime.now())}',
                             isSubtitle: false,
                             onTap: () {
-                              print('ok');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DateFormPage()));
                             }),
                         const SizedBox(
                           height: 30,
