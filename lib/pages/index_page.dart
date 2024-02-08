@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:videotron_rental/pages/product_page.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/category_card.dart';
 import 'package:videotron_rental/widgets/product_card.dart';
@@ -155,7 +156,16 @@ class _IndexPageState extends State<IndexPage> {
                             .where((element) =>
                                 element['category_id'] == selectedCategoryId)
                             .map((e) {
-                          return const ProductCard();
+                          return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ProductPage(),
+                                  ),
+                                );
+                              },
+                              child: const ProductCard());
                         }).toList(),
                       ),
                     ),
