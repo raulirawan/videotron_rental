@@ -38,6 +38,7 @@ class _RentalPageState extends State<RentalPage> {
         address: '-',
         width: 1,
         height: 1,
+        totalPrice: 0,
       );
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -361,7 +362,7 @@ class _RentalPageState extends State<RentalPage> {
                             ),
                           ),
                           Text(
-                            "Rp. 300.000.000",
+                            "Rp. ${_transactionModel?.totalPrice != null ? NumberFormat().format(_transactionModel?.totalPrice) : 0}",
                             style: primaryTextStyle.copyWith(
                               fontSize: 16,
                               fontWeight: bold,

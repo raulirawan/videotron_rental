@@ -21,6 +21,13 @@ class _SizeFormPageState extends State<SizeFormPage> {
   void _saveModel() async {
     _transactionModel?.width = int.parse(_controllerWidth.text);
     _transactionModel?.height = int.parse(_controllerHeight.text);
+
+    int totalSize =
+        int.parse(_controllerWidth.text) + int.parse(_controllerHeight.text);
+
+    int totalPrice = price * totalSize;
+    
+    _transactionModel?.totalPrice = totalPrice;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('transaction', json.encode(_transactionModel?.toJson()));
   }

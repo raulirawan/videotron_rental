@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const double defaultMargin = 20;
+int price = 100000;
 
 Color primaryColor = const Color(0xff211A2C);
 Color greyColor = const Color(0xffE9E9E9);

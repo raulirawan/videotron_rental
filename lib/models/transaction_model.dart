@@ -11,6 +11,7 @@ class TransactionModel {
   String? address;
   String? nameSales;
   String? phoneSales;
+  int? totalPrice;
 
   TransactionModel({
     this.date,
@@ -23,6 +24,7 @@ class TransactionModel {
     this.address,
     this.nameSales,
     this.phoneSales,
+    this.totalPrice,
   });
 
   TransactionModel.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class TransactionModel {
     address = json['address'];
     nameSales = json['name_sales'];
     phoneSales = json['phone_sales'];
+    totalPrice = json['total_price'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +67,7 @@ class TransactionModel {
     data['address'] = address;
     data['name_sales'] = nameSales;
     data['phone_sales'] = phoneSales;
+    data['total_price'] = totalPrice;
 
     print(data);
     return data;
