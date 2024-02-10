@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
+import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/pages/rental_page.dart';
 import 'package:videotron_rental/theme.dart';
 
@@ -33,10 +34,15 @@ class _DateFormPageState extends State<DateFormPage> {
       setState(() {
         _selectedStartTime = picked;
         _controllerStartTime.text = picked.format(context);
-        _transactionModel = TransactionModel(
-            startTime: picked,
-            endTime: _transactionModel?.endTime ?? _selectedEndTime,
-            date: _transactionModel?.date ?? _selectedDate);
+        // _transactionModel = TransactionModel(
+        //     startTime: picked,
+        //     endTime: _transactionModel?.endTime ?? _selectedEndTime,
+        //     date: _transactionModel?.date ?? _selectedDate);
+
+        _transactionModel?.date = _transactionModel?.date ?? _selectedDate;
+        _transactionModel?.startTime = picked;
+        _transactionModel?.endTime =
+            _transactionModel?.endTime ?? _selectedEndTime;
       });
     }
   }
@@ -50,10 +56,15 @@ class _DateFormPageState extends State<DateFormPage> {
       setState(() {
         _selectedEndTime = picked;
         _controllerEndTime.text = picked.format(context);
-        _transactionModel = TransactionModel(
-            startTime: _transactionModel?.startTime ?? _selectedStartTime,
-            endTime: picked,
-            date: _transactionModel?.date ?? _selectedDate);
+        // _transactionModel = TransactionModel(
+        //     startTime: _transactionModel?.startTime ?? _selectedStartTime,
+        //     endTime: picked,
+        //     date: _transactionModel?.date ?? _selectedDate);
+
+        _transactionModel?.date = _transactionModel?.date ?? _selectedDate;
+        _transactionModel?.startTime =
+            _transactionModel?.startTime ?? _selectedStartTime;
+        _transactionModel?.endTime = picked;
       });
     }
   }
@@ -69,10 +80,16 @@ class _DateFormPageState extends State<DateFormPage> {
         _selectedDate = picked;
         _controllerDate.text =
             _selectedDate.toLocal().toIso8601String().split('T')[0];
-        _transactionModel = TransactionModel(
-            startTime: _transactionModel?.startTime ?? _selectedStartTime,
-            endTime: _transactionModel?.endTime ?? _selectedEndTime,
-            date: picked);
+
+        _transactionModel?.date = picked;
+        _transactionModel?.startTime =
+            _transactionModel?.startTime ?? _selectedStartTime;
+        _transactionModel?.endTime =
+            _transactionModel?.endTime ?? _selectedEndTime;
+        // _transactionModel = TransactionModel(
+        //     startTime: _transactionModel?.startTime ?? _selectedStartTime,
+        //     endTime: _transactionModel?.endTime ?? _selectedEndTime,
+        //     date: picked);
       });
     }
   }
@@ -88,10 +105,9 @@ class _DateFormPageState extends State<DateFormPage> {
     if (jsonString != null) {
       _transactionModel = TransactionModel.fromJson(jsonDecode(jsonString));
     } else {
-      _transactionModel = TransactionModel(
-          date: DateTime.now(),
-          startTime: TimeOfDay.now(),
-          endTime: TimeOfDay.now());
+      _transactionModel?.date = DateTime.now();
+      _transactionModel?.startTime = TimeOfDay.now();
+      _transactionModel?.endTime = TimeOfDay.now();
     }
     _controllerDate.text =
         _transactionModel!.date!.toLocal().toIso8601String().split('T')[0];
@@ -237,8 +253,12 @@ class _DateFormPageState extends State<DateFormPage> {
                     // _transactionModel = TransactionModel()
                     _saveModel();
                     // Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => RentalPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MainPage(
+                                  selectedIndex: 1,
+                                )));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: yellowColor,

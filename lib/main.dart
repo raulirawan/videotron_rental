@@ -8,7 +8,7 @@ import 'package:videotron_rental/pages/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.clear();
 
@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/main-page': (context) => const MainPage(),
+        '/main-page': (context) => const MainPage(
+              selectedIndex: 0,
+            ),
       },
     );
   }

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
+import 'package:videotron_rental/pages/address_form_page.dart';
 import 'package:videotron_rental/pages/date_form_page.dart';
+import 'package:videotron_rental/pages/orderer_form_page.dart';
+import 'package:videotron_rental/pages/size_form_page.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/form_card.dart';
 
@@ -23,6 +26,22 @@ class _RentalPageState extends State<RentalPage> {
     final jsonString = prefs.getString('transaction');
     if (jsonString != null) {
       _transactionModel = TransactionModel.fromJson(jsonDecode(jsonString));
+    } else {
+      _transactionModel = TransactionModel(
+        date: DateTime.now(),
+        startTime: TimeOfDay.now(),
+        endTime: TimeOfDay.now(),
+        nameCustomer: 'Angin',
+        phoneCustomer: '08723927429',
+        nameSales: 'Jawa',
+        phoneSales: '08123984224',
+        address: '-',
+        width: 1,
+        height: 1,
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('transaction', json.encode(_transactionModel?.toJson()));
     }
     setState(() {});
   }
@@ -166,11 +185,13 @@ class _RentalPageState extends State<RentalPage> {
                             title:
                                 '${convertDate(_transactionModel?.date ?? DateTime.now())}',
                             isSubtitle: false,
+                            isButton: true,
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => DateFormPage()));
+                                      builder: (context) =>
+                                          const DateFormPage()));
                             }),
                         const SizedBox(
                           height: 30,
@@ -195,11 +216,16 @@ class _RentalPageState extends State<RentalPage> {
                           height: 10,
                         ),
                         FormCard(
-                            title: 'Alfan',
-                            subtitle: "+62812345678",
+                            title: _transactionModel?.nameCustomer ?? '-',
+                            subtitle: _transactionModel?.phoneCustomer ?? '-',
+                            isButton: true,
                             isSubtitle: true,
                             onTap: () {
-                              print('ok');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OrdererFormPage()));
                             }),
                         const SizedBox(
                           height: 40,
@@ -224,10 +250,16 @@ class _RentalPageState extends State<RentalPage> {
                           height: 10,
                         ),
                         FormCard(
-                            title: '....... M x ..... M',
+                            title:
+                                '${_transactionModel?.width ?? 1} M x ${_transactionModel?.height ?? 1} M',
+                            isButton: true,
                             isSubtitle: false,
                             onTap: () {
-                              print('ok');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SizeFormPage()));
                             }),
 
                         // lokasi penyewaaan
@@ -254,10 +286,15 @@ class _RentalPageState extends State<RentalPage> {
                           height: 10,
                         ),
                         FormCard(
-                            title: 'Gedun Pemkot Bekasi, Jl. Uta.....',
+                            title: _transactionModel?.address ?? '-',
+                            isButton: true,
                             isSubtitle: false,
                             onTap: () {
-                              print('ok');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddressFormPage()));
                             }),
 
                         // lokasi penyewaaan
