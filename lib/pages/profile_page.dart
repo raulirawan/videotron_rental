@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:videotron_rental/pages/change_password_page.dart';
+import 'package:videotron_rental/pages/change_profile_page.dart';
 import 'package:videotron_rental/pages/history_page.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/profile_tile.dart';
@@ -48,18 +50,36 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const ProfileTile(
-              title: "Ubah Profil",
-              icon: 'assets/icon-profile.png',
-            ),
-            const ProfileTile(
-              title: "Ganti Password",
-              icon: 'assets/icon-lock.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ChangeProfilePage()));
+              },
+              child: const ProfileTile(
+                title: "Ubah Profil",
+                icon: 'assets/icon-profile.png',
+              ),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const HistoryPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ChangePasswordPage()));
+              },
+              child: const ProfileTile(
+                title: "Ganti Password",
+                icon: 'assets/icon-lock.png',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HistoryPage()));
               },
               child: const ProfileTile(
                 title: "Riwayat Penyewaan",

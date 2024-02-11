@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:videotron_rental/pages/history_detail_page.dart';
+import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/history_card.dart';
 
@@ -77,7 +78,15 @@ class HistoryPage extends StatelessWidget {
                       height: 45,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage(
+                                          selectedIndex: 1,
+                                        )),
+                                (route) => false);
+                          },
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStatePropertyAll(yellowColor),
@@ -111,7 +120,8 @@ class HistoryPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HistoryDetailPage()));
+                                  builder: (context) =>
+                                      const HistoryDetailPage()));
                         },
                         child: HistoryCard()),
                   ],

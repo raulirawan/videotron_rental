@@ -61,8 +61,8 @@ class HistoryDetailPage extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(
-                        top: 60, left: defaultMargin, right: defaultMargin),
-                    height: 200,
+                        top: 30, left: defaultMargin, right: defaultMargin),
+                    height: 150,
                     decoration: BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.circular(
@@ -139,11 +139,42 @@ class HistoryDetailPage extends StatelessWidget {
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                        top: 20, left: defaultMargin, right: defaultMargin),
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            "Pembayaran Pertama",
+                            style: primaryTextStyle.copyWith(
+                              fontWeight: bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Status Pembayaran",
+                                "Status",
                                 style: primaryTextStyle.copyWith(
                                   fontSize: 12,
                                 ),
@@ -157,11 +188,172 @@ class HistoryDetailPage extends StatelessWidget {
                               ),
                             ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                "Rp. 20.000.000",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 20,
+                            ),
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () {},
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(yellowColor),
+                                  shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Bayar",
+                                  style: primaryTextStyle.copyWith(
+                                    fontWeight: bold,
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // pembayaran kedua
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                        top: 20, left: defaultMargin, right: defaultMargin),
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            "Pembayaran Kedua",
+                            style: primaryTextStyle.copyWith(
+                              fontWeight: bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Status",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                "Success",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                "Rp. 20.000.000",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 20,
+                            ),
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(yellowColor),
+                                shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "Bayar",
+                                style: primaryTextStyle.copyWith(
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(
+                  horizontal: defaultMargin,
+                  vertical: defaultMargin,
+                ),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(yellowColor),
+                    shape: MaterialStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    "Unduh Invoice",
+                    style: primaryTextStyle.copyWith(
+                      fontWeight: bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
