@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videotron_rental/pages/index_page.dart';
 import 'package:videotron_rental/pages/login_page.dart';
 import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/pages/register_page.dart';
 import 'package:videotron_rental/pages/splash_page.dart';
+import 'package:videotron_rental/providers/auth_provider.dart';
+import 'package:videotron_rental/providers/videotron_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,16 +23,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => const SplashPage(),
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
-        '/main-page': (context) => const MainPage(
-              selectedIndex: 0,
-            ),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VideotronProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/': (context) => const SplashPage(),
+          '/login': (context) => const LoginPage(),
+          '/register': (context) => const RegisterPage(),
+          '/main-page': (context) => const MainPage(
+                selectedIndex: 0,
+              ),
+        },
+      ),
     );
   }
 }

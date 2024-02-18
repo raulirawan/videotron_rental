@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:videotron_rental/models/videotron_model.dart';
 import 'package:videotron_rental/theme.dart';
 
 class ProductPage extends StatelessWidget {
-  const ProductPage({super.key});
+  final VideotronModel? videotron;
+
+  const ProductPage({super.key, this.videotron});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +17,12 @@ class ProductPage extends StatelessWidget {
             Container(
               height: 304,
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/image-demo-1.png')),
+                  image: NetworkImage(
+                    videotron!.image.toString(),
+                  ),
+                ),
               ),
             ),
             GestureDetector(
@@ -57,7 +63,7 @@ class ProductPage extends StatelessWidget {
                         height: 40,
                       ),
                       Text(
-                        "Processor – LVP 615 Series",
+                        "${videotron?.name}",
                         style: primaryTextStyle.copyWith(
                             fontSize: 20, fontWeight: bold),
                       ),
@@ -77,7 +83,9 @@ class ProductPage extends StatelessWidget {
                               fontWeight: bold,
                             ),
                           ),
-                          const SizedBox(width: 5,),
+                          const SizedBox(
+                            width: 5,
+                          ),
                           Text(
                             "(40)",
                             style: primaryTextStyle.copyWith(fontSize: 12),
@@ -88,7 +96,7 @@ class ProductPage extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        "LVP615 series LED HD Video Processor wireless WI-FI control&remote control pip/pbp,text overlay synchronic Multi-unit In Parallel.",
+                        "${videotron?.description}",
                         style: blackTextStyle.copyWith(
                           fontSize: 12,
                           fontWeight: bold,

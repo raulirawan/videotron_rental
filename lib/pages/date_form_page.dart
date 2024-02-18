@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/main_page.dart';
-import 'package:videotron_rental/pages/rental_page.dart';
 import 'package:videotron_rental/theme.dart';
 
 class DateFormPage extends StatefulWidget {

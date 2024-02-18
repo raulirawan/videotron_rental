@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:videotron_rental/pages/login_page.dart';
+import 'package:videotron_rental/providers/videotron_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -12,7 +14,17 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    getInitCategory();
+    getInitVideotron();
     init();
+  }
+
+  getInitVideotron() async {
+    await Provider.of<VideotronProvider>(context, listen: false).getVideotron();
+  }
+
+  getInitCategory() async {
+    await Provider.of<VideotronProvider>(context, listen: false).getCategory();
   }
 
   Future<void> init() async {

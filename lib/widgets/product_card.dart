@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:videotron_rental/models/videotron_model.dart';
 import 'package:videotron_rental/theme.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  final VideotronModel? videotron;
+
+  const ProductCard({super.key, this.videotron});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +23,8 @@ class ProductCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  'assets/image-demo-1.png',
+                Image.network(
+                  videotron!.image.toString(),
                   height: 150,
                 ),
                 const SizedBox(
@@ -30,7 +33,7 @@ class ProductCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Text(
-                    "LR Pro LED",
+                    "${videotron?.name}",
                     style: primaryTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: bold,

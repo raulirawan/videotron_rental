@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:videotron_rental/providers/auth_provider.dart';
 import 'package:videotron_rental/theme.dart';
 
-class ChangeProfilePage extends StatelessWidget {
+class ChangeProfilePage extends StatefulWidget {
   const ChangeProfilePage({super.key});
 
   @override
+  State<ChangeProfilePage> createState() => _ChangeProfilePageState();
+}
+
+class _ChangeProfilePageState extends State<ChangeProfilePage> {
+  bool isLoading = false;
+  @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    TextEditingController nameController =
+        TextEditingController(text: authProvider.user.name);
+    TextEditingController phoneController =
+        TextEditingController(text: authProvider.user.phone);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: primaryColor,
@@ -31,7 +45,7 @@ class ChangeProfilePage extends StatelessWidget {
                 height: 18,
               ),
               Text(
-                "Alfan",
+                "${authProvider.user.name}",
                 style: whiteTextStyle.copyWith(
                   fontSize: 24,
                   fontWeight: medium,
@@ -41,7 +55,7 @@ class ChangeProfilePage extends StatelessWidget {
                 height: 5,
               ),
               Text(
-                "083812345678",
+                "${authProvider.user.phone}",
                 style: whiteTextStyle.copyWith(
                   fontSize: 16,
                 ),
@@ -57,11 +71,13 @@ class ChangeProfilePage extends StatelessWidget {
                       8,
                     )),
                 child: TextField(
+                  controller: nameController,
+                  style: whiteTextStyle,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Alfan",
                     hintStyle: whiteTextStyle,
                     fillColor: Colors.red,
+                    focusColor: whiteColor,
                   ),
                 ),
               ),
@@ -74,9 +90,11 @@ class ChangeProfilePage extends StatelessWidget {
                       8,
                     )),
                 child: TextField(
+                  keyboardType: TextInputType.number,
+                  style: whiteTextStyle,
+                  controller: phoneController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "083812345678",
                     hintStyle: whiteTextStyle,
                     fillColor: Colors.red,
                   ),
@@ -87,17 +105,79 @@ class ChangeProfilePage extends StatelessWidget {
                 height: 50,
                 margin: const EdgeInsets.only(top: 20),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (isLoading) {
+                      return;
+                    }
+                    String name = nameController.text;
+                    String phone = phoneController.text;
+
+                    if (name.isEmpty || phone.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(
+                            milliseconds: 1000,
+                          ),
+                          backgroundColor: alertColor,
+                          content: const Text(
+                            "Silahkan Isi Nama & Nomor Telepon",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      if (await authProvider.updateProfile(
+                          name: nameController.text,
+                          phone: phoneController.text,
+                          token: authProvider.user.token)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: const Duration(
+                              milliseconds: 1000,
+                            ),
+                            backgroundColor: successColor,
+                            content: const Text(
+                              "Berhasil Update Profile!",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: const Duration(
+                              milliseconds: 1000,
+                            ),
+                            backgroundColor: alertColor,
+                            content: const Text(
+                              "Gagal Update Profile, Coba Lagi!",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: yellowColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    "Ubah Profil",
-                    style: blackTextStyle.copyWith(fontWeight: semiBold),
-                  ),
+                  child: (isLoading)
+                      ? CircularProgressIndicator(
+                          color: whiteColor,
+                        )
+                      : Text(
+                          "Ubah Profil",
+                          style: blackTextStyle.copyWith(fontWeight: semiBold),
+                        ),
                 ),
               ),
             ],

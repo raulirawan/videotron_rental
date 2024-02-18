@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:videotron_rental/pages/change_password_page.dart';
 import 'package:videotron_rental/pages/change_profile_page.dart';
 import 'package:videotron_rental/pages/history_page.dart';
+import 'package:videotron_rental/pages/login_page.dart';
+import 'package:videotron_rental/providers/auth_provider.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/profile_tile.dart';
 
@@ -10,6 +13,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: SafeArea(
           child: Container(
@@ -32,7 +37,7 @@ class ProfilePage extends StatelessWidget {
               height: 18,
             ),
             Text(
-              "Alfan",
+              authProvider.user.name.toString(),
               style: whiteTextStyle.copyWith(
                 fontSize: 24,
                 fontWeight: medium,
@@ -42,7 +47,7 @@ class ProfilePage extends StatelessWidget {
               height: 5,
             ),
             Text(
-              "083812345678",
+              "${authProvider.user.phone}",
               style: whiteTextStyle.copyWith(
                 fontSize: 16,
               ),
@@ -89,10 +94,34 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const ProfileTile(
-              title: "Keluar",
-              icon: 'assets/icon-exit.png',
-              isButton: false,
+            GestureDetector(
+              onTap: () async {
+                if (await authProvider.logout(token: authProvider.user.token)) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                      (route) => false);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(
+                        milliseconds: 1000,
+                      ),
+                      backgroundColor: alertColor,
+                      content: const Text(
+                        "Gagal Logout, Coba Lagi!",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: const ProfileTile(
+                title: "Keluar",
+                icon: 'assets/icon-exit.png',
+                isButton: false,
+              ),
             ),
           ],
         ),

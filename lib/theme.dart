@@ -7,6 +7,7 @@ int price = 100000;
 Color primaryColor = const Color(0xff211A2C);
 Color greyColor = const Color(0xffE9E9E9);
 Color alertColor = const Color(0xffD9435E);
+Color successColor = const Color.fromARGB(193, 0, 255, 17);
 Color whiteColor = const Color(0xffFFFFFF);
 Color yellowColor = const Color(0xffFDC300);
 Color blackColor = const Color(0xff000000);
