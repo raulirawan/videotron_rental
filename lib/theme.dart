@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 const double defaultMargin = 20;
 int price = 100000;
@@ -45,3 +46,51 @@ FontWeight regular = FontWeight.w400;
 FontWeight medium = FontWeight.w500;
 FontWeight semiBold = FontWeight.w600;
 FontWeight bold = FontWeight.w700;
+
+convertDate(String? date) {
+    // Intl.defaultLocale = 'id';
+    DateTime dateTimeWithTimeZone = DateTime.parse(date!);
+    String formattedDate =
+        DateFormat('d MMMM, yyyy').format(dateTimeWithTimeZone);
+
+    var day = DateFormat('EEEE').format(dateTimeWithTimeZone);
+    var hari = "";
+    switch (day) {
+      case 'Sunday':
+        {
+          hari = "Minggu";
+        }
+        break;
+      case 'Monday':
+        {
+          hari = "Senin";
+        }
+        break;
+      case 'Tuesday':
+        {
+          hari = "Selasa";
+        }
+        break;
+      case 'Wednesday':
+        {
+          hari = "Rabu";
+        }
+        break;
+      case 'Thursday':
+        {
+          hari = "Kamis";
+        }
+        break;
+      case 'Friday':
+        {
+          hari = "Jumat";
+        }
+        break;
+      case 'Saturday':
+        {
+          hari = "Sabtu";
+        }
+        break;
+    }
+    return '$hari, $formattedDate';
+  }

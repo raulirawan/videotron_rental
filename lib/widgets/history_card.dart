@@ -1,10 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:videotron_rental/models/transaction_data_model.dart';
+import 'package:videotron_rental/providers/transaction_provider.dart';
 import 'package:videotron_rental/theme.dart';
 
 class HistoryCard extends StatelessWidget {
-  const HistoryCard({super.key});
+  TransactionDataModel transactionDataModel;
+  HistoryCard({super.key, required this.transactionDataModel});
 
   @override
+  convertDate(String? date) {
+    // Intl.defaultLocale = 'id';
+    DateTime dateTimeWithTimeZone = DateTime.parse(date!);
+    String formattedDate =
+        DateFormat('d MMMM, yyyy').format(dateTimeWithTimeZone);
+
+    var day = DateFormat('EEEE').format(dateTimeWithTimeZone);
+    var hari = "";
+    switch (day) {
+      case 'Sunday':
+        {
+          hari = "Minggu";
+        }
+        break;
+      case 'Monday':
+        {
+          hari = "Senin";
+        }
+        break;
+      case 'Tuesday':
+        {
+          hari = "Selasa";
+        }
+        break;
+      case 'Wednesday':
+        {
+          hari = "Rabu";
+        }
+        break;
+      case 'Thursday':
+        {
+          hari = "Kamis";
+        }
+        break;
+      case 'Friday':
+        {
+          hari = "Jumat";
+        }
+        break;
+      case 'Saturday':
+        {
+          hari = "Sabtu";
+        }
+        break;
+    }
+    return '$hari, $formattedDate';
+  }
+
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -18,7 +70,7 @@ class HistoryCard extends StatelessWidget {
                   topLeft: Radius.circular(15), topRight: Radius.circular(15))),
           child: Center(
             child: Text(
-              "Videotron 10x10 m",
+              "Videotron ${transactionDataModel.width} x ${transactionDataModel.height} m",
               style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             ),
           ),
@@ -45,20 +97,20 @@ class HistoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "COR.INV.09879",
+                    "${transactionDataModel.code}",
                     style: primaryTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: bold,
                     ),
                   ),
                   Text(
-                    "Sabtu, 3 Januari 2023 | 18.00",
+                    "${convertDate(transactionDataModel.bookingDate)} | ${transactionDataModel.startTime}",
                     style: primaryTextStyle.copyWith(
                       fontSize: 12,
                     ),
                   ),
                   Text(
-                    "Gedung Pemkot Bekasi, Jl. Utara Raya.....",
+                    "${transactionDataModel.address}",
                     style: primaryTextStyle.copyWith(
                       fontSize: 12,
                     ),
