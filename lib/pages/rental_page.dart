@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/address_form_page.dart';
 import 'package:videotron_rental/pages/date_form_page.dart';
 import 'package:videotron_rental/pages/orderer_form_page.dart';
+import 'package:videotron_rental/pages/payment_page.dart';
 import 'package:videotron_rental/pages/size_form_page.dart';
+import 'package:videotron_rental/providers/auth_provider.dart';
+import 'package:videotron_rental/providers/transaction_provider.dart';
 import 'package:videotron_rental/theme.dart';
 import 'package:videotron_rental/widgets/form_card.dart';
 
@@ -19,9 +23,13 @@ class RentalPage extends StatefulWidget {
 }
 
 class _RentalPageState extends State<RentalPage> {
+  bool isLoading = false;
   TransactionModel? _transactionModel;
+  late AuthProvider authProvider;
 
   Future<void> _loadData() async {
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString('transaction');
     if (jsonString != null) {
@@ -31,8 +39,8 @@ class _RentalPageState extends State<RentalPage> {
         date: DateTime.now(),
         startTime: TimeOfDay.now(),
         endTime: TimeOfDay.now(),
-        nameCustomer: 'Angin',
-        phoneCustomer: '08723927429',
+        nameCustomer: authProvider.user.name,
+        phoneCustomer: authProvider.user.phone,
         nameSales: 'Jawa',
         phoneSales: '08123984224',
         address: '-',
@@ -102,6 +110,10 @@ class _RentalPageState extends State<RentalPage> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    TransactionProvider transactionProvider =
+        Provider.of<TransactionProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -322,8 +334,8 @@ class _RentalPageState extends State<RentalPage> {
                           height: 10,
                         ),
                         FormCard(
-                            title: 'Joko Tama',
-                            subtitle: '+62834-6789-5678',
+                            title: '${_transactionModel?.nameSales}',
+                            subtitle: '${_transactionModel?.phoneSales}',
                             isSubtitle: true,
                             onTap: () {
                               print('ok');
@@ -377,7 +389,41 @@ class _RentalPageState extends State<RentalPage> {
                         width: double.infinity,
                         height: 40,
                         child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              var data =
+                                  await transactionProvider.storeTransaction(
+                                      token: authProvider.user.token,
+                                      transactionModel: _transactionModel);
+                              if (data != 'error') {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PaymentPage(data['payment_url'])),
+                                  (route) => false,
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: const Duration(
+                                      milliseconds: 1000,
+                                    ),
+                                    backgroundColor: alertColor,
+                                    content: const Text(
+                                      "Transaksi Gagal Coba Lagi!",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStatePropertyAll(yellowColor),
@@ -387,13 +433,17 @@ class _RentalPageState extends State<RentalPage> {
                                 ),
                               ),
                             ),
-                            child: Text(
-                              "Pembayaran",
-                              style: primaryTextStyle.copyWith(
-                                fontSize: 14,
-                                fontWeight: semiBold,
-                              ),
-                            )),
+                            child: (isLoading)
+                                ? CircularProgressIndicator(
+                                    color: whiteColor,
+                                  )
+                                : Text(
+                                    "Pembayaran",
+                                    style: primaryTextStyle.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: semiBold,
+                                    ),
+                                  )),
                       )
                     ],
                   ),

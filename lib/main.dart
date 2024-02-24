@@ -6,6 +6,7 @@ import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/pages/register_page.dart';
 import 'package:videotron_rental/pages/splash_page.dart';
 import 'package:videotron_rental/providers/auth_provider.dart';
+import 'package:videotron_rental/providers/transaction_provider.dart';
 import 'package:videotron_rental/providers/videotron_provider.dart';
 
 Future<void> main() async {
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => VideotronProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TransactionProvider(),
         ),
       ],
       child: MaterialApp(

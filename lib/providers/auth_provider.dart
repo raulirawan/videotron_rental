@@ -100,4 +100,24 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updatePassword({
+    String? oldPassword,
+    String? newPassword,
+    String? newPasswordConfirmation,
+    String? token,
+  }) async {
+    try {
+      await AuthService().updatePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        newPasswordConfirmation: newPasswordConfirmation,
+        token: token,
+      );
+      return true;
+    } catch (e) {
+      print('${e}');
+      return false;
+    }
+  }
 }

@@ -132,6 +132,39 @@ class AuthService {
     }
   }
 
+  Future<bool> updatePassword({
+    String? oldPassword,
+    String? newPassword,
+    String? newPasswordConfirmation,
+    String? token,
+  }) async {
+    var url = '$baseUrl/update/password';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': token!,
+    };
+    var body = jsonEncode({
+      'old_password': oldPassword,
+      'new_password': newPassword,
+      'new_password_confirmation': newPasswordConfirmation,
+    });
+
+    var response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal Update Password');
+    }
+  }
+
   Future<bool> logout({
     String? token,
   }) async {

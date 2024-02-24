@@ -118,7 +118,20 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (context) =>
                                     const MainPage(selectedIndex: 0)),
                             (route) => false);
-                      } else {}
+                      } else {
+                         ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(
+                            milliseconds: 1000,
+                          ),
+                          backgroundColor: alertColor,
+                          content: const Text(
+                            "Username & Password Salah",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                      }
                       setState(() {
                         isLoading = false;
                       });

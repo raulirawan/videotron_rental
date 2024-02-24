@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/main_page.dart';
+import 'package:videotron_rental/providers/auth_provider.dart';
 import 'package:videotron_rental/theme.dart';
 
 class OrdererFormPage extends StatefulWidget {
@@ -25,19 +26,20 @@ class _OrdererFormPageState extends State<OrdererFormPage> {
     prefs.setString('transaction', json.encode(_transactionModel?.toJson()));
   }
 
+  late AuthProvider authProvider;
   Future<void> _loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString('transaction');
     if (jsonString != null) {
       _transactionModel = TransactionModel.fromJson(jsonDecode(jsonString));
     } else {
-      _transactionModel?.nameCustomer = 'Angin';
-      _transactionModel?.phoneCustomer = '08723927429';
+      _transactionModel?.nameCustomer = authProvider.user.name;
+      _transactionModel?.phoneCustomer = authProvider.user.phone;
     }
     _controllerNameCustomer.text =
-        (_transactionModel?.nameCustomer ?? 'Angin');
-    _controllerPhoneCustomer.text =
-        (_transactionModel?.phoneCustomer ?? '08723927429');
+        (_transactionModel?.nameCustomer ?? authProvider.user.name.toString());
+    _controllerPhoneCustomer.text = (_transactionModel?.phoneCustomer ??
+        authProvider.user.phone.toString());
   }
 
   @override
