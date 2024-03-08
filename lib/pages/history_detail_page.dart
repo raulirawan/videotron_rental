@@ -38,7 +38,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
         final file = File('${directory}/invoice.pdf');
         await file.writeAsBytes(pdfBytes);
         var tes = await OpenFile.open('$directory/invoice.pdf');
-        print(tes.message);
         print('File saved to Downloads directory: $directory');
       } catch (e) {
         print(e);
@@ -52,7 +51,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       await Permission.manageExternalStorage.request();
-
+      await Permission.photos.request();
       if (androidInfo.version.sdkInt >= 33) {
         photos = await Permission.photos.status.isGranted;
       } else {
