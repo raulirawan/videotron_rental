@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/address_form_page.dart';
 import 'package:videotron_rental/pages/date_form_page.dart';
+import 'package:videotron_rental/pages/main_page.dart';
 import 'package:videotron_rental/pages/orderer_form_page.dart';
 import 'package:videotron_rental/pages/payment_page.dart';
 import 'package:videotron_rental/pages/size_form_page.dart';
@@ -37,6 +38,7 @@ class _RentalPageState extends State<RentalPage> {
     } else {
       _transactionModel = TransactionModel(
         date: DateTime.now(),
+        dateEnd: DateTime.now(),
         startTime: TimeOfDay.now(),
         endTime: TimeOfDay.now(),
         nameCustomer: authProvider.user.name,
@@ -122,7 +124,7 @@ class _RentalPageState extends State<RentalPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainPage(selectedIndex: 0)), (route) => false);
                 },
                 child: Container(
                   margin: const EdgeInsets.only(
@@ -314,32 +316,38 @@ class _RentalPageState extends State<RentalPage> {
                         const SizedBox(
                           height: 40,
                         ),
-                        Text(
-                          "Sales",
-                          style: subtitleTextStyle.copyWith(
-                            fontSize: 16,
-                            fontWeight: bold,
-                          ),
-                        ),
+                        (authProvider.user.roles == 'SALES')
+                            ? Text(
+                                "Sales",
+                                style: subtitleTextStyle.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: bold,
+                                ),
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          "Team Sales PT. Karindo Mitra Internasional",
-                          style: subtitleTextStyle.copyWith(
-                            fontSize: 12,
-                          ),
-                        ),
+                        (authProvider.user.roles == 'SALES')
+                            ? Text(
+                                "Team Sales PT. Karindo Mitra Internasional",
+                                style: subtitleTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 10,
                         ),
-                        FormCard(
-                            title: '${_transactionModel?.nameSales}',
-                            subtitle: '${_transactionModel?.phoneSales}',
-                            isSubtitle: true,
-                            onTap: () {
-                              print('ok');
-                            }),
+                        (authProvider.user.roles == 'SALES')
+                            ? FormCard(
+                                title: '${authProvider.user.name}',
+                                subtitle: '${authProvider.user.phone}',
+                                isSubtitle: true,
+                                onTap: () {
+                                  print('ok');
+                                })
+                            : const SizedBox(),
 
                         const SizedBox(
                           height: 150,
@@ -390,6 +398,20 @@ class _RentalPageState extends State<RentalPage> {
                         height: 40,
                         child: ElevatedButton(
                             onPressed: () async {
+                              if (_transactionModel?.totalPrice == 0) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: const Duration(
+                                      milliseconds: 1000,
+                                    ),
+                                    backgroundColor: alertColor,
+                                    content: const Text(
+                                      "Data Belum Lengkap",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
                               setState(() {
                                 isLoading = true;
                               });

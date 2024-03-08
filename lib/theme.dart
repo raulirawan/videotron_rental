@@ -94,3 +94,16 @@ convertDate(String? date) {
     }
     return '$hari, $formattedDate';
   }
+
+  int differenceInDays(String date1Str, String date2Str) {
+  DateTime date1 = DateTime.parse(date1Str);
+  DateTime date2 = DateTime.parse(date2Str);
+
+  // Calculate the difference in milliseconds
+  int differenceInMilliseconds = date2.difference(date1).inMilliseconds;
+
+  // Convert milliseconds to days
+  int differenceInDays = (differenceInMilliseconds / (1000 * 60 * 60 * 24)).abs().toInt();
+
+  return differenceInDays;
+}

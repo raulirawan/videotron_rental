@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/main_page.dart';
+import 'package:videotron_rental/services/transaction_service.dart';
 import 'package:videotron_rental/theme.dart';
 
 class SizeFormPage extends StatefulWidget {
@@ -19,13 +20,15 @@ class _SizeFormPageState extends State<SizeFormPage> {
   final _controllerHeight = TextEditingController();
 
   void _saveModel() async {
+    int daysDifference = differenceInDays(formatDate(_transactionModel?.date ?? DateTime.now()), formatDate(_transactionModel?.dateEnd ?? DateTime.now()));
+
     _transactionModel?.width = int.parse(_controllerWidth.text);
     _transactionModel?.height = int.parse(_controllerHeight.text);
 
     int totalSize =
-        int.parse(_controllerWidth.text) + int.parse(_controllerHeight.text);
+        int.parse(_controllerWidth.text) * int.parse(_controllerHeight.text);
 
-    int totalPrice = price * totalSize;
+    int totalPrice = (price * totalSize) * (daysDifference == 0 ? 1 : daysDifference);
     
     _transactionModel?.totalPrice = totalPrice;
     SharedPreferences prefs = await SharedPreferences.getInstance();

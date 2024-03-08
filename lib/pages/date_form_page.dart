@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:videotron_rental/pages/main_page.dart';
+import 'package:videotron_rental/services/transaction_service.dart';
 import 'package:videotron_rental/theme.dart';
 
 class DateFormPage extends StatefulWidget {
@@ -18,10 +19,12 @@ class _DateFormPageState extends State<DateFormPage> {
   final _controllerStartTime = TextEditingController();
   final _controllerEndTime = TextEditingController();
   final _controllerDate = TextEditingController();
+  final _controllerDateEnd = TextEditingController();
 
   TimeOfDay _selectedStartTime = TimeOfDay.now();
   TimeOfDay _selectedEndTime = TimeOfDay.now();
   DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDateEnd = DateTime.now();
 
   Future<void> _selectTimeStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -38,6 +41,8 @@ class _DateFormPageState extends State<DateFormPage> {
         //     date: _transactionModel?.date ?? _selectedDate);
 
         _transactionModel?.date = _transactionModel?.date ?? _selectedDate;
+        _transactionModel?.dateEnd =
+            _transactionModel?.dateEnd ?? _selectedDateEnd;
         _transactionModel?.startTime = picked;
         _transactionModel?.endTime =
             _transactionModel?.endTime ?? _selectedEndTime;
@@ -60,6 +65,8 @@ class _DateFormPageState extends State<DateFormPage> {
         //     date: _transactionModel?.date ?? _selectedDate);
 
         _transactionModel?.date = _transactionModel?.date ?? _selectedDate;
+        _transactionModel?.dateEnd =
+            _transactionModel?.dateEnd ?? _selectedDateEnd;
         _transactionModel?.startTime =
             _transactionModel?.startTime ?? _selectedStartTime;
         _transactionModel?.endTime = picked;
@@ -76,6 +83,7 @@ class _DateFormPageState extends State<DateFormPage> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+
         _controllerDate.text =
             _selectedDate.toLocal().toIso8601String().split('T')[0];
 
@@ -92,7 +100,37 @@ class _DateFormPageState extends State<DateFormPage> {
     }
   }
 
+  Future<void> _showDatePickerEnd(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _transactionModel?.dateEnd ?? _selectedDateEnd,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _selectedDateEnd) {
+      setState(() {
+        _selectedDateEnd = picked;
+        _controllerDateEnd.text =
+            _selectedDateEnd.toLocal().toIso8601String().split('T')[0];
+
+        _transactionModel?.dateEnd = picked;
+        _transactionModel?.date = _transactionModel?.date ?? _selectedDate;
+        _transactionModel?.startTime =
+            _transactionModel?.startTime ?? _selectedStartTime;
+        _transactionModel?.endTime =
+            _transactionModel?.endTime ?? _selectedEndTime;
+      });
+    }
+  }
+
   void _saveModel() async {
+    int daysDifference = differenceInDays(formatDate(_transactionModel?.date ?? DateTime.now()), formatDate(_transactionModel?.dateEnd ?? DateTime.now()));
+
+
+    int totalSize = (_transactionModel?.width ?? 1) * (_transactionModel!.height ?? 1);
+
+    int totalPrice = (price * totalSize) * (daysDifference == 0 ? 1 : daysDifference);
+    
+    _transactionModel?.totalPrice = totalPrice;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('transaction', json.encode(_transactionModel?.toJson()));
   }
@@ -104,11 +142,14 @@ class _DateFormPageState extends State<DateFormPage> {
       _transactionModel = TransactionModel.fromJson(jsonDecode(jsonString));
     } else {
       _transactionModel?.date = DateTime.now();
+      _transactionModel?.dateEnd = DateTime.now();
       _transactionModel?.startTime = TimeOfDay.now();
       _transactionModel?.endTime = TimeOfDay.now();
     }
     _controllerDate.text =
         _transactionModel!.date!.toLocal().toIso8601String().split('T')[0];
+    _controllerDateEnd.text =
+        _transactionModel!.dateEnd!.toLocal().toIso8601String().split('T')[0];
     _controllerStartTime.text = (_transactionModel!.startTime != null
         ? _transactionModel?.startTime?.format(context)
         : _selectedStartTime.format(context))!;
@@ -150,7 +191,7 @@ class _DateFormPageState extends State<DateFormPage> {
                 height: 30,
               ),
               Text(
-                "Tanggal",
+                "Tanggal Mulai",
                 style: primaryTextStyle,
               ),
               Container(
@@ -173,6 +214,38 @@ class _DateFormPageState extends State<DateFormPage> {
                       icon: const Icon(Icons.date_range),
                       onPressed: () {
                         _showDatePicker(context);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Tanggal Selesai",
+                style: primaryTextStyle,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: blackColor),
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    )),
+                child: TextField(
+                  readOnly: true,
+                  controller: _controllerDateEnd,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Tanggal",
+                    hintStyle: primaryTextStyle,
+                    fillColor: Colors.red,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.date_range),
+                      onPressed: () {
+                        _showDatePickerEnd(context);
                       },
                     ),
                   ),

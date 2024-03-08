@@ -32,10 +32,10 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final transactionProvider = Provider.of<TransactionProvider>(context);
-  Future<void> refresh() async {
-        await transactionProvider
-            .getTransaction(token: authProvider.user.token);
-      }
+    Future<void> refresh() async {
+      await transactionProvider.getTransaction(token: authProvider.user.token);
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xfff5f5f5),
       body: RefreshIndicator(
@@ -61,22 +61,29 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                          margin: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
-                                      Image.asset('assets/image-profile.png'),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage(selectedIndex: 0)));
+                                        },
+                                        child: Image.asset('assets/image-profile.png')),
                                       const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
                                         "Halo, ${authProvider.user.name}",
-                                        style: whiteTextStyle.copyWith(fontSize: 16),
+                                        style: whiteTextStyle.copyWith(
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -175,15 +182,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         HistoryDetailPage(
-                                                          transactionDataModel: e,
+                                                          transactionDataModel:
+                                                              e,
                                                         )));
                                           },
-                                          child: HistoryCard(transactionDataModel: e),
+                                          child: HistoryCard(
+                                              transactionDataModel: e),
                                         ),
                                       )
                                       .toList(),
                                 );
-            
+
                                 // return GestureDetector(
                                 //     onTap: () {
                                 //       Navigator.push(

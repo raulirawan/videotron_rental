@@ -27,6 +27,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   bool storage = true;
   bool videos = true;
   bool photos = true;
+  bool externalStorage = true;
 
   Widget build(BuildContext context) {
     Future<void> _savePdfLocally(List<int> pdfBytes) async {
@@ -36,7 +37,8 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
 
         final file = File('${directory}/invoice.pdf');
         await file.writeAsBytes(pdfBytes);
-        await OpenFile.open('$directory/invoice.pdf');
+        var tes = await OpenFile.open('$directory/invoice.pdf');
+        print(tes.message);
         print('File saved to Downloads directory: $directory');
       } catch (e) {
         print(e);
@@ -49,12 +51,15 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     Future<void> requestStoragePermission() async {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      await Permission.manageExternalStorage.request();
+
       if (androidInfo.version.sdkInt >= 33) {
         photos = await Permission.photos.status.isGranted;
       } else {
         storage = await Permission.storage.status.isGranted;
       }
-      if (storage && photos) {
+      externalStorage = await Permission.manageExternalStorage.status.isGranted;
+      if (storage && photos && externalStorage) {
         var data = await transactionProvider.getInvoice(
             token: authProvider.user.token,
             transactionId: widget.transactionDataModel.id);
@@ -65,6 +70,10 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
         // Permission denied, show a message or handle accordingly
         print('Storage permission denied');
       }
+
+      setState(() {
+        isLoading = false;
+      });
     }
 
     return SafeArea(
@@ -123,7 +132,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                     width: double.infinity,
                     margin: const EdgeInsets.only(
                         top: 30, left: defaultMargin, right: defaultMargin),
-                    height: 150,
+                    height: 170,
                     decoration: BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.circular(
@@ -146,17 +155,53 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           const SizedBox(
                             height: 12,
                           ),
+                            Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Nama Penyewa",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                "${widget.transactionDataModel.nameOrder}",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ],
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Tanggal",
+                                "Tanggal Mulai",
                                 style: primaryTextStyle.copyWith(
                                   fontSize: 12,
                                 ),
                               ),
                               Text(
                                 "${convertDate(widget.transactionDataModel.bookingDate)}",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Tanggal Selesai",
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                "${convertDate(widget.transactionDataModel.endDate)}",
                                 style: primaryTextStyle.copyWith(
                                   fontSize: 12,
                                   fontWeight: bold,
@@ -325,9 +370,6 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                       isLoading = true;
                     });
                     requestStoragePermission();
-                    setState(() {
-                      isLoading = false;
-                    });
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(yellowColor),

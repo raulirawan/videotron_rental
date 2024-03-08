@@ -6,7 +6,7 @@ import 'package:videotron_rental/models/transaction_model.dart';
 import 'package:http/http.dart' as http;
 
 formatDate(DateTime? date) {
-  final DateFormat formatter = DateFormat('y-MM-d');
+  final DateFormat formatter = DateFormat('y-MM-dd');
   final String formattedDate = formatter.format(date!);
 
   return formattedDate;
@@ -14,7 +14,7 @@ formatDate(DateTime? date) {
 
 convertTime(time) {
   final TimeOfDay timeOfDay = TimeOfDay(hour: time.hour, minute: time.minute);
-  final String formattedTime = '${timeOfDay.hour}:${timeOfDay.minute}';
+  final String formattedTime = '${timeOfDay.hour.toString().padLeft(2,'0')}:${timeOfDay.minute.toString().padLeft(2, '0')}';
 
   return formattedTime;
 }
@@ -34,8 +34,11 @@ class TransactionService {
     };
     var body = jsonEncode({
       'booking_date': formatDate(transactionModel?.date),
+      'end_date': formatDate(transactionModel?.dateEnd),
       'start_time': convertTime(transactionModel?.startTime),
       'end_time': convertTime(transactionModel?.endTime),
+      'name_order': transactionModel?.nameCustomer,
+      'phone': transactionModel?.phoneCustomer,
       'address': transactionModel?.address,
       'width': transactionModel?.width,
       'height': transactionModel?.height,

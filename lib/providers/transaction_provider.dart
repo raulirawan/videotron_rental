@@ -49,7 +49,6 @@ class TransactionProvider with ChangeNotifier {
       // Assuming the response is a List<String>
       _transaction = transaction;
       notifyListeners(); // Notify listeners of state change
-      print('tai');
     } else {
       throw Exception('Failed to load data');
     }

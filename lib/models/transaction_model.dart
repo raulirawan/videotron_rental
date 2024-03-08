@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class TransactionModel {
   DateTime? date = DateTime.now();
+  DateTime? dateEnd = DateTime.now();
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   String? nameCustomer;
@@ -15,6 +16,7 @@ class TransactionModel {
 
   TransactionModel({
     this.date,
+    this.dateEnd,
     this.startTime,
     this.endTime,
     this.nameCustomer,
@@ -29,6 +31,7 @@ class TransactionModel {
 
   TransactionModel.fromJson(Map<String, dynamic> json) {
     date = json['date'] != null ? DateTime.parse(json['date']) : DateTime.now();
+    dateEnd = json['date_end'] != null ? DateTime.parse(json['date_end']) : DateTime.now();
     final timeOfDayStringStart = json['start_time'];
     final timeOfDayPartsStart = timeOfDayStringStart
         .substring(10, timeOfDayStringStart.length - 1)
@@ -59,6 +62,7 @@ class TransactionModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['date'] = date?.toIso8601String();
+    data['date_end'] = dateEnd?.toIso8601String();
     data['start_time'] = startTime?.toString();
     data['end_time'] = endTime?.toString();
     data['name_customer'] = nameCustomer;

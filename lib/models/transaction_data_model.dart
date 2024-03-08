@@ -6,6 +6,9 @@ class TransactionDataModel {
   int? userId;
   String? code;
   String? bookingDate;
+  String? endDate;
+  String? nameOrder;
+  String? phone;
   String? startTime;
   String? endTime;
   String? address;
@@ -20,6 +23,9 @@ class TransactionDataModel {
     this.userId,
     this.code,
     this.bookingDate,
+    this.endDate,
+    this.nameOrder,
+    this.phone,
     this.startTime,
     this.endTime,
     this.address,
@@ -35,8 +41,11 @@ class TransactionDataModel {
     userId = json['user_id'];
     code = json['code'];
     bookingDate = json['booking_date'];
+    endDate = json['end_date'];
     startTime = json['start_time'];
     endTime = json['end_time'];
+    nameOrder = json['name_order'];
+    phone = json['phone'];
     address = json['address'];
     width = json['width'];
     height = json['height'];
@@ -53,8 +62,11 @@ class TransactionDataModel {
       'user_id': userId,
       'code': code,
       'booking_date': bookingDate,
+      'end_date': endDate,
       'start_time': startTime,
       'end_time': endTime,
+      'name_order': nameOrder,
+      'phone': phone,
       'address': address,
       'width': width,
       'height': height,

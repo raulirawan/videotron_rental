@@ -90,7 +90,7 @@ class PaymentCard extends StatelessWidget {
                       // generate payment
                       var data = await transactionProvider.payment(
                           token: authProvider.user.token,
-                          transactionId: paymentModel.transactionId);
+                          transactionId: paymentModel.id);
                       if (data != 'error') {
                         Navigator.pushAndRemoveUntil(
                           context,

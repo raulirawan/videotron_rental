@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:videotron_rental/pages/login_page.dart';
 import 'package:videotron_rental/providers/videotron_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:videotron_rental/theme.dart';
+
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,6 +19,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    getInitPrice();
     getInitCategory();
     getInitVideotron();
     init();
@@ -25,6 +31,22 @@ class _SplashPageState extends State<SplashPage> {
 
   getInitCategory() async {
     await Provider.of<VideotronProvider>(context, listen: false).getCategory();
+  }
+
+  getInitPrice() async {
+      final response = await http.get(Uri.parse('https://karindo.jasproweb.com/api/setting'));
+    
+      if (response.statusCode == 200) {
+        // Data fetched successfully
+        final jsonData = jsonDecode(response.body);
+
+        price = jsonData['data']['price_meter'] ?? 100000;
+        // Parse jsonData into Dart objects
+        // Example: List<dynamic> dataList = jsonData['data'];
+      } else {
+        // Handle errors
+        print('Failed to fetch data: ${response.statusCode}');
+      }
   }
 
   Future<void> init() async {
